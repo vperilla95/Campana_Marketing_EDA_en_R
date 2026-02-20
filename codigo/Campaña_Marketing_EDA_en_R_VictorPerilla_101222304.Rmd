@@ -1,5 +1,6 @@
 ---
 title: "Análisis de Campañas de Marketing"
+subtitle: "Métodos de Simulación Estadística - Maestría en Ciencia de Datos - Pontificia Universidad Javeriana Cali"
 author: "Victor Hugo Perilla Martinez"
 date: "`r Sys.Date()`"
 output:
@@ -75,6 +76,7 @@ library(kableExtra)
 library(tibble)
 library(gridExtra)
 library(tidyverse)
+
 ```
 
 ```{r carga_datos, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
@@ -88,7 +90,7 @@ datos <- read_excel(temp)
 print(colnames(datos))
 
 # Ruta del proyecto (Windows -> usar /)
-ruta_base <- "G:/Mi unidad/MAESTRIA_CIENCIA_DE_DATOS/métodos de simulación estadística/1 analisis exploratorio/proyecto_actividad_1/codigo"
+ruta_base <- "C:/Users/Victor/Documents/Campana_Marketing_EDA_en_R/datos"
 
 # Crear carpeta si no existe
 if (!dir.exists(ruta_base)) dir.create(ruta_base, recursive = TRUE)
@@ -862,7 +864,7 @@ knitr::kable(resumen_limpieza_edad,
 
 Se hace la verificación que se observa en la Tabla \@ref(tab:tab-eliminar-age) que la variable `Age` tenía 2 edades que mostraban inconsistencias, en la Tabla \@ref(tab:tab-cuant-disc-ac5-descr) se ve que tienen un valor máximo de 240 años, de por si representa un 0.098% de los datos, se procede a eliminar los valores. La eliminación se justifica debido a que es un error estructural de los datos, no un outlier ya que no tiene sentido un humano con esa edad, tratar de imputarlo podría ser un error y generar afectaciones a los datos. La decisión no afectan representatividad, no alteran distribución, no sesgan muestra, realmente no generan pérdida significativa de información.
 
-Se realiza también la validación de que `AcceptedCmpOverall` = `AcceptedCmp1` + `AcceptedCmp2` + `AcceptedCmp3` + `AcceptedCmp4` + `AcceptedCmp5` donde no se encuentran inconsistencias, y se verifica que la columna derivada es correcta. El resumen de imputaicón se puede ve en la Tabla \@ref(tab: tabValidacionAcceptedCmpOverallSum).
+Se realiza también la validación de que `AcceptedCmpOverall` = `AcceptedCmp1` + `AcceptedCmp2` + `AcceptedCmp3` + `AcceptedCmp4` + `AcceptedCmp5` donde no se encuentran inconsistencias, y se verifica que la columna derivada es correcta. El resumen de imputaicón se puede ve en la Tabla \@ref(tab:tabValidacionAcceptedCmpOverallSum).
 
 ```{r tabValidacionAcceptedCmpOverallSum, message=FALSE, warning=FALSE}
 data_temp <- datos_sin_inconsistencia_v2
@@ -944,10 +946,12 @@ graficar_nans(data_temp, temp_columns, diccionario_vars)
 
 Para evaluar formalmente si los datos faltantes se distribuyen de manera completamente aleatoria (MCAR), se aplica la prueba de Little que se implementada en la libreria `naniar::mcar_test()` a los datos, esta prueba cuya hipótesis nula establece que los datos faltantes se distribuyen de forma aleatoria. Dado el gran tamaño de la base de datos (2039 registros), se estableció un nivel de significancia de 0.001. Para poder realizar el proceso debemos quitar del análisis las Variables derivadas,Variables casi constantes y Variables perfectamente correlacionadas. Por lo cual se retiran del análisis las variables: `"MntTotal"`, `"MntRegularProds"` y `"AcceptedCmpOverall"` por ser derivadas, y las variables `"marital_Widow"` y`"education_PhD"` por multicolinealidad (propia de one-hot-econding). Esto no quiere decir que se eliminen del dataset, debido a que es un modelo de clasificación de si acepta o no la campaña, y en estos modelos la multicolinealidad no afecta como en los de regresión, tampoco las variables derivadas, antes pueden ayudar a impulsar un mejor ajuste en el modelo.
 
-```{r tab-mcar, message=FALSE, warning=FALSE}
+```{r tabMcar, message=FALSE, warning=FALSE}
 data_temp <- datos_sin_inconsistencia_v2
 temp_columns <- c( "Income","Kidhome","Teenhome","Recency","MntWines","MntFruits", "MntMeatProducts","MntFishProducts","MntSweetProducts","MntGoldProds", "NumDealsPurchases","NumWebPurchases","NumCatalogPurchases","NumStorePurchases", "NumWebVisitsMonth","AcceptedCmp3","AcceptedCmp4","AcceptedCmp5", "AcceptedCmp1","AcceptedCmp2","Complain","Response","Age", "Customer_Days","marital_Divorced","marital_Married","marital_Single", "marital_Together","education_2n Cycle","education_Basic", "education_Graduation","education_Master")
-resultado_mcar <- naniar::mcar_test(data_temp[, temp_columns])
+sub_mcar <- data_temp[, temp_columns] %>% dplyr::mutate(dplyr::across(everything(), as.numeric))
+
+resultado_mcar <- naniar::mcar_test(sub_mcar)
 
 
 knitr::kable(resultado_mcar, 
@@ -956,9 +960,9 @@ knitr::kable(resultado_mcar,
   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
 ```
 
-En la Tabla \@ref(tab:tab-mcar) El valor p obtenido fue igual a 6.416355e-07, lo que lleva a rechazar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes no son completamente aleatorios, tienen sesgo.
+En la Tabla \@ref(tab:tabMcar) El valor p obtenido fue igual a 6.416355e-07, lo que lleva a rechazar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes no son completamente aleatorios, tienen sesgo.
 
-Dado esto no se puede hacer imputaciones como la media y la mediana. Por lo cual debemos requerir otros procesos, en cuanto a `"MntWines"` tenemos que `MntTotal` = `MntWines` + `MntFruits` + `MntMeatProducts` + `MntFishProducts` + `MntSweetProducts` +`MntGoldProds` y como solo el dato de `MntTotal` es inconsistente cuando `MntWines` es `(NA)` procederemos a recuperar el dato de `MntWines` = `MntTotal` - `MntFruits` - `MntMeatProducts` - `MntFishProducts` - `MntSweetProducts` -\`MntGoldProds. El resumen de imputaicón se puede ve en la Tabla \@ref(tab: tab-imputacion-MntWines).
+Dado esto no se puede hacer imputaciones como la media y la mediana. Por lo cual debemos requerir otros procesos, en cuanto a `"MntWines"` tenemos que `MntTotal` = `MntWines` + `MntFruits` + `MntMeatProducts` + `MntFishProducts` + `MntSweetProducts` +`MntGoldProds` y como solo el dato de `MntTotal` es inconsistente cuando `MntWines` es `(NA)` procederemos a recuperar el dato de `MntWines` = `MntTotal` - `MntFruits` - `MntMeatProducts` - `MntFishProducts` - `MntSweetProducts` -\`MntGoldProds. El resumen de imputaicón se puede ve en la Tabla \@ref(tab:tab-imputacion-MntWines).
 
 ```{r tab-imputacion-MntWines, message=FALSE, warning=FALSE}
 data_temp <- datos_sin_inconsistencia_v2
@@ -994,12 +998,14 @@ knitr::kable(resumen_mntwines,
   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
 ```
 
-Después de esta imputación de datos `(NA)`evaluamos de nuevo si los datos faltantes se distribuyen de manera completamente aleatoria (MCAR), de acá encontramos en la Tabla \@ref(tab:tab-mcar2) que con un El valor p obtenido fue igual a 0.3058334, podemos aceptar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes son completamente aleatorios y podemos imputar la variable Income con la media o la mediana.
+Después de esta imputación de datos `(NA)`evaluamos de nuevo si los datos faltantes se distribuyen de manera completamente aleatoria (MCAR), de acá encontramos en la Tabla \@ref(tab:tabMcarAgain) que con un El valor p obtenido fue igual a 0.3058334, podemos aceptar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes son completamente aleatorios y podemos imputar la variable Income con la media o la mediana.
 
-```{r tab-mcar2, message=FALSE, warning=FALSE}
+```{r tabMcarAgain, message=FALSE, warning=FALSE}
 data_temp <- datos_sin_inconsistencia_v3
 temp_columns <- c( "Income","Kidhome","Teenhome","Recency","MntWines","MntFruits", "MntMeatProducts","MntFishProducts","MntSweetProducts","MntGoldProds", "NumDealsPurchases","NumWebPurchases","NumCatalogPurchases","NumStorePurchases", "NumWebVisitsMonth","AcceptedCmp3","AcceptedCmp4","AcceptedCmp5", "AcceptedCmp1","AcceptedCmp2","Complain","Response","Age", "Customer_Days","marital_Divorced","marital_Married","marital_Single", "marital_Together","education_2n Cycle","education_Basic", "education_Graduation","education_Master")
-resultado_mcar <- naniar::mcar_test(data_temp[, temp_columns])
+sub_mcar <- data_temp[, temp_columns] %>% dplyr::mutate(dplyr::across(everything(), as.numeric))
+
+resultado_mcar <- naniar::mcar_test(sub_mcar)
 
 knitr::kable(resultado_mcar, 
              caption = "Resultados de aplicación de prueba mcar a datos",
@@ -1011,7 +1017,7 @@ knitr::kable(resultado_mcar,
 
 #### Imputación de Monto de gasto en vinos (MntWines)
 
-Se mostró anteriormente que se debio imputar este dato usando el calculo registrado ya en los datos. Teniendo en cuenta que `"MntWines"` se usa en la ecuación `MntTotal` = `MntWines` + `MntFruits` + `MntMeatProducts` + `MntFishProducts` + `MntSweetProducts` +`MntGoldProds` y como solo el dato de `MntTotal` es inconsistente cuando `MntWines` es `(NA)` se procedió a recuperar el dato de `MntWines` = `MntTotal` - `MntFruits` - `MntMeatProducts` - `MntFishProducts` - `MntSweetProducts` -`MntGoldProds`. Esto nos permitió saber que la variable Income que tambien tiene datos faltantes es producto del azar mediante la prueba mcar. El resumen de imputaicón se puede ve en la Tabla \@ref(tab: tab-imputacion-MntWines).
+Se mostró anteriormente que se debio imputar este dato usando el calculo registrado ya en los datos. Teniendo en cuenta que `"MntWines"` se usa en la ecuación `MntTotal` = `MntWines` + `MntFruits` + `MntMeatProducts` + `MntFishProducts` + `MntSweetProducts` +`MntGoldProds` y como solo el dato de `MntTotal` es inconsistente cuando `MntWines` es `(NA)` se procedió a recuperar el dato de `MntWines` = `MntTotal` - `MntFruits` - `MntMeatProducts` - `MntFishProducts` - `MntSweetProducts` -`MntGoldProds`. Esto nos permitió saber que la variable Income que tambien tiene datos faltantes es producto del azar mediante la prueba mcar. El resumen de imputaicón se puede ve en la Tabla \@ref(tab:tab-imputacion-MntWines).
 
 #### Imputación de Ingresos (Income)
 
@@ -1250,14 +1256,33 @@ for(v in vars_graph) {
   lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
 }
 
-# 2. Unir resultados en una sola tabla
+# Unir resultados 
 tabla_maestra <- bind_rows(lista_resultados) %>%
   select(Variable, Response, everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`) %>%   mutate(     Variable = str_trim(as.character(Variable)),     Variable = ifelse(       Variable %in% names(diccionario_vars),       unname(diccionario_vars[Variable]),       Variable     )   ) 
+
+
 
 knitr::kable(tabla_maestra, 
              digits = 2, 
              caption = "Análisis de Montos y Outliers (1.5*IQR) para reconstrucción de MntTotal y MntRegularProds ",
              format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+```
+
+```{r carga_datos_limpios, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+ruta_base <- "C:/Users/Victor/Documents/Campana_Marketing_EDA_en_R/datos"
+
+
+if (!dir.exists(ruta_base)) dir.create(ruta_base, recursive = TRUE)
+
+
+saveRDS(datos_finales_sin_errores_ni_inconsistencias,
+        file = file.path(ruta_base, "datos_limpios.rds"))
+
+
+write.csv(datos_finales_sin_errores_ni_inconsistencias,
+          file = file.path(ruta_base, "datos_limpios.csv"),
+          row.names = FALSE)
 ```
 
 # Resultados
@@ -2235,3 +2260,37 @@ tabla_poder_predictivo %>%
 
 - Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L., François, R., ... & Yutani, H. (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686. https://doi.org/10.21105/joss.01686
 
+# Anexos
+
+El repositorio del proyecto se encuentra disponible públicamente en GitHub en el siguiente enlace:
+
+https://github.com/vperilla95/Campana_Marketing_EDA_en_R
+
+El repositorio contiene los archivos necesarios para reproducir el análisis exploratorio realizado en este trabajo. La estructura del proyecto es la siguiente:
+
+Archivo del proyecto:
+
+- `Proyecto_Campaña_Marketing_EDA_en_R.Rproj`
+
+Carpeta datos/:
+
+- `datos_originales.rds`
+
+- `datos_originales.csv`
+
+- `datos_limpios.rds`
+
+- `datos_limpios.csv`
+
+Carpeta codigo/:
+
+- `Campaña_Marketing_EDA_en_R_VictorPerilla_101222304.Rmd`
+
+- `Campaña_Marketing_EDA_en_R_VictorPerilla_101222304.html`
+
+El archivo `Campaña_Marketing_EDA_en_R_VictorPerilla_101222304.Rmd` contiene el código completo del análisis exploratorio, incluyendo limpieza de datos, tratamiento de valores faltantes, análisis descriptivo, visualizaciones y conclusiones.
+
+Para compilar el informe completo:
+
+Abra el proyecto en RStudio (haga doble clic en `Proyecto_Campaña_Marketing_EDA_en_R.Rproj`).
+En la consola de R, ejecute `Campaña_Marketing_EDA_en_R_VictorPerilla_101222304.Rmd`
