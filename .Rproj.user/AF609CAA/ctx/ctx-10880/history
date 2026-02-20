@@ -1,0 +1,39 @@
+---
+title: "Acitividad_1_VP_1014222304"
+---
+title: "Acitividad_1_VP_1014222304"
+---
+# title: "Acitividad_1_VP_1014222304"
+# output: html_document
+---
+library(readxl)
+data <- read_excel("G:/Mi unidad/MAESTRIA_CIENCIA_DE_DATOS/métodos de simulación estadística/1 analisis exploratorio/proyecto_actividad_1/datos/datos_originales/data_actividad1.xlsx")
+data <- read_excel("G:/Mi unidad/MAESTRIA_CIENCIA_DE_DATOS/métodos de simulación estadística/1 analisis exploratorio/proyecto_actividad_1/datos/datos_originales/data_actividad1.xlsx")
+View(data)
+View(data)
+url <- "https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx"
+temp <- tempfile(fileext = ".xlsx")
+download.file(url, temp, mode = "wb")
+datos <- read_excel(temp)
+head(datos)
+View(datos)
+url \<- "<https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx>"
+url <- "<https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx>"
+temp <- tempfile(fileext = ".xlsx") download.file(url, temp, mode = "wb")
+url <- "<https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx>"
+temp <- tempfile(fileext = ".xlsx") download.file(url, temp, mode = "wb")
+url <- "<https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx>"
+temp <- tempfile(fileext = ".xlsx") download.file(url, temp, mode = "wb")
+url <- "<https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx>"
+temp <- tempfile(fileext = ".xlsx")
+download.file(url, temp, mode = "wb")
+url <- "https://raw.githubusercontent.com/Centromagis/metodosySIM3_V2/main/datos_MetySim/data_actividad1.xlsx"
+temp <- tempfile(fileext = ".xlsx")
+download.file(url, temp, mode = "wb")
+datos <- read_excel(temp)
+head(datos)
+tabla1 <- data.frame( Variable = c( "Income","Kidhome","Teenhome","Recency","MntWines","MntFruits", "MntMeatProducts","MntFishProducts","MntSweetProducts","MntGoldProds", "NumDealsPurchases","NumWebPurchases","NumCatalogPurchases","NumStorePurchases", "NumWebVisitsMonth","AcceptedCmp3","AcceptedCmp4","AcceptedCmp5", "AcceptedCmp1","AcceptedCmp2","Complain","Response","Age", "Customer_Days","marital_Divorced","marital_Married","marital_Single", "marital_Together","marital_Widow","education_2n Cycle","education_Basic", "education_Graduation","education_Master","education_PhD","MntTotal", "MntRegularProds","AcceptedCmpOverall" ),
+Descripcion = c( "Ingreso anual del hogar del cliente", "Número de niños pequeños en el hogar", "Número de adolescentes en el hogar", "Días desde la última compra", "Gasto en vinos en los últimos 2 años", "Gasto en frutas en los últimos 2 años", "Gasto en carnes en los últimos 2 años", "Gasto en pescado en los últimos 2 años", "Gasto en dulces en los últimos 2 años", "Gasto en productos de oro en los últimos 2 años", "Número de compras con descuento", "Número de compras por web", "Número de compras por catálogo", "Número de compras en tienda física", "Número de visitas web en el último mes", "Aceptó campaña 3 (1=Sí, 0=No)", "Aceptó campaña 4 (1=Sí, 0=No)", "Aceptó campaña 5 (1=Sí, 0=No)", "Aceptó campaña 1 (1=Sí, 0=No)", "Aceptó campaña 2 (1=Sí, 0=No)", "Presentó queja en los últimos 2 años", "Aceptó la última campaña", "Edad del cliente", "Días desde que es cliente", "Estado civil divorciado (dummy)", "Estado civil casado (dummy)", "Estado civil soltero (dummy)", "Estado civil en pareja (dummy)", "Estado civil viudo (dummy)", "Educación secundaria", "Educación básica", "Educación universitaria", "Educación maestría", "Educación doctorado", "Gasto total en todos los productos", "Gasto total en productos regulares", "Número total de campañas aceptadas" ),
+Clasificacion_Variable = c( "Cuantitativa Continua", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Discreta" ),
+stringsAsFactors = FALSE )
+install.packages("knitr")

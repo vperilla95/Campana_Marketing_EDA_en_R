@@ -1,0 +1,512 @@
+geom_text(aes(label = paste0("n=", n, "\n", sprintf("%.4f%%", 100*pct))),
+vjust = -0.2, size = 3.8) +
+scale_y_continuous(labels = function(x) sprintf("%.4f%%", 100*x),
+limits = c(0, ymax)) +
+labs(
+title = stringr::str_wrap(v, width = 30),
+x = "Valor observado",
+y = "Porcentaje"
+) +
+theme_minimal() +
+theme(
+plot.title = element_text(size = 11, face = "bold", hjust = 0.5),
+plot.margin = margin(10, 10, 10, 10)
+)
+})
+variable = "marital_Divorced"
+datos_sin_inconsistencia_v1 = datos_sin_duplicados
+datos_sin_inconsistencia_v1[[variable]] <- replace(datos_sin_duplicados[[variable]],
+datos_sin_duplicados[[variable]] == 100, 1)
+wrap_plots(plots, ncol = 3)
+data_temp = datos_sin_inconsistencia_v1
+#Analisis de registros de eduación
+print("")
+print("Analisis de registros de eduación")
+nivel_educativo <- c("marital_Divorced","marital_Married","marital_Single",
+"marital_Together","marital_Widow")
+data_temp$combinacion_nivel_educativo <- apply(data_temp[, nivel_educativo], 1, function(fila) {
+paste(names(fila)[fila == 1], collapse = " + ")
+})
+data_temp$combinacion_nivel_educativo[data_temp$combinacion_nivel_educativo == ""] <-
+"Ninguna categoría marcada"
+tabla_nivel_educativo <- as.data.frame(table(data_temp$combinacion_nivel_educativo))
+colnames(tabla_nivel_educativo) <- c("Combinacion", "Frecuencia")
+tabla_nivel_educativo$Porcentaje <- round(
+100 * tabla_nivel_educativo$Frecuencia / nrow(data_temp), 2
+)
+tabla_nivel_educativo[order(-tabla_nivel_educativo$Frecuencia), ]
+suma_nivel_educativo <- rowSums(data_temp[, nivel_educativo])
+registros_inadecuados <- data_temp[suma_nivel_educativo != 1, ]
+cantidad_inadecuados <- nrow(registros_inadecuados)
+porcentaje_inadecuados <- round(
+100 * cantidad_inadecuados / nrow(data_temp), 2
+)
+print(paste0('cantidad_inadecuados nivel educativo: ',cantidad_inadecuados))
+print(paste0('porcentaje_inadecuados nivel educativo: ', porcentaje_inadecuados,"%"))
+# Eliminación datos inconsistentes de estado civil
+data_temp <- datos_sin_inconsistencia_v1
+vars <- c("education_Basic",
+"education_2n Cycle",
+"education_Graduation",
+"education_Master",
+"education_PhD")
+plots <- lapply(vars, function(v){
+conteo <- as.data.frame(table(data_temp[[v]], useNA = "ifany"))
+colnames(conteo) <- c("valor", "n")
+conteo$pct <- conteo$n / sum(conteo$n)
+ymax <- max(conteo$pct) * 1.20
+ggplot(conteo, aes(x = factor(valor), y = pct)) +
+geom_col() +
+geom_text(aes(label = paste0("n=", n, "\n", sprintf("%.4f%%", 100*pct))),
+vjust = -0.2, size = 3.8) +
+scale_y_continuous(labels = function(x) sprintf("%.4f%%", 100*x),
+limits = c(0, ymax)) +
+labs(
+title = stringr::str_wrap(v, width = 30),
+x = "Valor observado",
+y = "Porcentaje"
+) +
+theme_minimal() +
+theme(
+plot.title = element_text(size = 11, face = "bold", hjust = 0.5),
+plot.margin = margin(10, 10, 10, 10)
+)
+})
+wrap_plots(plots, ncol = 3)
+#Analisis de registros de estado civil
+print("Analisis de registros de nivel de eduacación")
+estado_civil <- c("education_Basic",
+"education_2n Cycle",
+"education_Graduation",
+"education_Master",
+"education_PhD")
+data_temp = datos_sin_inconsistencia_v1
+data_temp$combinacion_estado_civil <- apply(data_temp[, estado_civil], 1, function(fila) {
+paste(names(fila)[fila == 1], collapse = " + ")
+})
+data_temp$combinacion_estado_civil[data_temp$combinacion_estado_civil == ""] <-
+"Ninguna categoría marcada"
+tabla_estado_civil <- as.data.frame(table(data_temp$combinacion_estado_civil))
+colnames(tabla_estado_civil) <- c("Combinacion", "Frecuencia")
+tabla_estado_civil$Porcentaje <- round(
+100 * tabla_estado_civil$Frecuencia / nrow(data_temp), 2
+)
+tabla_estado_civil[order(-tabla_estado_civil$Frecuencia), ]
+suma_estado_civil <- rowSums(data_temp[, estado_civil])
+registros_inadecuados <- data_temp[suma_estado_civil != 1, ]
+cantidad_inadecuados <- nrow(registros_inadecuados)
+porcentaje_inadecuados <- round(
+100 * cantidad_inadecuados / nrow(data_temp), 2
+)
+print(paste0('cantidad_inadecuados nivel educativo: ',cantidad_inadecuados))
+print(paste0('porcentaje_inadecuados nivel educativo: ', porcentaje_inadecuados,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+vars <- c("Response",
+"Complain")
+plots <- lapply(vars, function(v){
+conteo <- as.data.frame(table(data_temp[[v]], useNA = "ifany"))
+colnames(conteo) <- c("valor", "n")
+conteo$pct <- conteo$n / sum(conteo$n)
+ymax <- max(conteo$pct) * 1.20
+ggplot(conteo, aes(x = factor(valor), y = pct)) +
+geom_col() +
+geom_text(aes(label = paste0("n=", n, "\n", sprintf("%.4f%%", 100*pct))),
+vjust = -0.2, size = 3.8) +
+scale_y_continuous(labels = function(x) sprintf("%.4f%%", 100*x),
+limits = c(0, ymax)) +
+labs(
+title = stringr::str_wrap(v, width = 30),
+x = "Valor observado",
+y = "Porcentaje"
+) +
+theme_minimal() +
+theme(
+plot.title = element_text(size = 11, face = "bold", hjust = 0.5),
+plot.margin = margin(10, 10, 10, 10)
+)
+})
+wrap_plots(plots, ncol = 3)
+data_temp <- datos_sin_inconsistencia_v1
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds")
+plots <- lapply(vars_graph, function(v){
+ggplot(data_temp, aes(x = factor(Response), y = .data[[v]], fill = factor(Response))) +
+geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 1.5, alpha = 0.7) +
+scale_fill_manual(values = c("#3498db", "#2ecc71")) +
+labs(title = v,
+x = "Aceptó última campaña",
+y = "Monto") +
+theme_minimal() +
+theme(legend.position = "none",
+plot.title = element_text(size = 10, face = "bold"))
+})
+wrap_plots(plots, ncol = 3)
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds")
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, , everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`)
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "simple")
+data_temp <- datos_sin_inconsistencia_v1
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds",
+"Response")
+datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+cols_total <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts","MntGoldProds")
+cols_regular <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+datos_sin_inconsistencia_v2 <- datos_sin_inconsistencia_v1 %>%
+mutate(
+# Sumas auxiliares
+suma_componentes_total = rowSums(across(all_of(cols_total)), na.rm = FALSE),
+suma_componentes_regular = rowSums(across(all_of(cols_regular)), na.rm = FALSE),
+# Imputación de MntRegularProds:
+# si es negativo, lo reemplazamos por la suma de componentes regulares
+MntRegularProds = if_else( MntRegularProds < 0,
+suma_componentes_regular,
+MntRegularProds
+)
+)
+cat("Casos con MntRegularProds negativo (antes): ",
+sum(datos_sin_inconsistencia_v1$MntRegularProds < 0, na.rm = TRUE), "\n")
+cat("Casos con MntRegularProds negativo (después): ",
+sum(datos_sin_inconsistencia_v2$MntRegularProds < 0, na.rm = TRUE), "\n")
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(porcentaje_inconsistentes_mnt)
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts", porcentaje_inconsistentes_mnt))
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds ", porcentaje_inconsistentes_mnt))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt))
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds --> ", porcentaje_inconsistentes_mnt))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+tabla_inconsistencia_montos = head(registros_inconsistentes_mnt[, c(categorias_productos, c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds"))])
+knitr::kable(tabla_inconsistencia_montos,
+caption = "Datos inconsistentes ",
+format = "simple")
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+registros_inconsistentes_negativos =  datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(categorias_productos,columnas_muestra)], registros_inconsistentes_negativos[, c(categorias_productos,columnas_muestra)]),
+knitr::kable(tabla_inconsistencia_montos,
+caption = "Datos inconsistentes ",
+format = "simple")
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+registros_inconsistentes_negativos =  datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(categorias_productos,columnas_muestra)],
+registros_inconsistentes_negativos[, c(categorias_productos,columnas_muestra)]))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds",
+"Response")
+datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+data_temp <- datos_sin_inconsistencia_v1
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds",
+"Response")
+datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+data_temp <- datos_sin_inconsistencia_v1
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds",
+"Response")
+datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntGoldProds","MntRegularProds")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntGoldProds + MntRegularProds --> ", porcentaje_inconsistentes_mnt,"%"))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+print(paste0("inconsistencias MntTotal = MntWines + MntFruits + MntMeatProducts + MntFishProducts + MntSweetProducts --> ", porcentaje_inconsistentes_mnt,"%"))
+registros_inconsistentes_negativos =  datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(categorias_productos,columnas_muestra)],
+registros_inconsistentes_negativos[, c(categorias_productos,columnas_muestra)]))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+registros_inconsistentes_negativos =  datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(categorias_productos,columnas_muestra)],
+registros_inconsistentes_negativos[, c(categorias_productos,columnas_muestra)]))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+cantidad_inconsistentes_mnt <- nrow(registros_inconsistentes_mnt)
+porcentaje_inconsistentes_mnt <- round(
+100 * cantidad_inconsistentes_mnt / nrow(data_temp), 2
+)
+registros_inconsistentes_negativos =  datos_sin_inconsistencia_v1 %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(columnas_muestra)],
+registros_inconsistentes_negativos[, c(columnas_muestra)]))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+registros_inconsistentes_negativos =  data_temp %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(columnas_muestra)],
+registros_inconsistentes_negativos[, c(columnas_muestra)]))
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+registros_inconsistentes_negativos =  data_temp %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(columnas_muestra)]),
+head(registros_inconsistentes_negativos[, c(columnas_muestra)]))
+knitr::kable(tabla_inconsistencia_montos,
+caption = "Datos inconsistentes ",
+format = "simple")
+data_temp <- datos_sin_inconsistencia_v1
+categorias_productos <- c("MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts")
+data_temp$suma_calculada_productos <- rowSums(data_temp[, categorias_productos], na.rm = TRUE) # na.rm = TRUE trata nan como 0
+registros_inconsistentes_mnt <- data_temp[data_temp$MntTotal != data_temp$suma_calculada_productos, ]
+registros_inconsistentes_negativos =  data_temp %>%
+select(all_of(vars_graph)) %>%
+filter(MntRegularProds < 0)
+columnas_muestra =  c("MntTotal", "MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts", "MntGoldProds","MntRegularProds")
+tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(columnas_muestra)]),
+head(registros_inconsistentes_negativos[, c(columnas_muestra)]))
+knitr::kable(tabla_inconsistencia_montos,
+caption = "Datos inconsistentes en Mnt hallazgos de (na) y de datos negativos",
+format = "simple")

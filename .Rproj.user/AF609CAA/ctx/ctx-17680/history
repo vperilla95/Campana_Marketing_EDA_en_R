@@ -1,0 +1,512 @@
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+plots <- lapply(vars_graph, function(v){
+ggplot(data_temp, aes(x = factor(Response), y = .data[[v]], fill = factor(Response))) +
+geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 1.5, alpha = 0.7) +
+scale_fill_manual(values = c("#3498db", "#2ecc71")) +
+labs(title = diccionario_vars[[v]],
+x = "Aceptó última campaña",
+y = "Valor") +
+theme_minimal() +
+theme(legend.position = "none",
+plot.title = element_text(size = 10, face = "bold"))
+})
+wrap_plots(plots, ncol = 3)
+data_temp <- datos_finales_sin_errores_ni_inconsistencias
+vars_graph <- c(
+"Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+plots <- lapply(vars_graph, function(v){
+ggplot(data_temp, aes(x = factor(Response), y = .data[[v]], fill = factor(Response))) +
+geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 1.5, alpha = 0.7) +
+scale_fill_manual(values = c("#3498db", "#2ecc71")) +
+labs(title = diccionario_vars[[v]],
+x = "Aceptó última campaña",
+y = "Cantidad") +
+theme_minimal() +
+theme(legend.position = "none",
+plot.title = element_text(size = 10, face = "bold"))
+})
+wrap_plots(plots, ncol = 3)
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c("Income","MntWines","MntFruits","MntMeatProducts",
+"MntFishProducts","MntSweetProducts",
+"MntGoldProds","MntTotal","MntRegularProds")
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, , everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`)
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c(    "Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, , everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`)
+tabla_maestra$variable <- diccionario_vars[tabla_maestra$variable]
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c(    "Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, , everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`)
+tabla_maestra <- tabla_maestra %>%
+mutate(variable = diccionario_vars[variable])
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c(    "Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, , everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`)
+tabla_maestra <- tabla_maestra %>%
+mutate(
+variable = str_trim(as.character(variable)),  # asegurar que sea texto limpio
+variable = ifelse(
+variable %in% names(diccionario_vars),
+unname(diccionario_vars[variable]),
+variable
+)
+)
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+data_temp <- datos_sin_inconsistencia_v1
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c(    "Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`) %>%
+mutate(
+Variable = str_trim(as.character(Variable)),
+Variable = ifelse(
+Variable %in% names(diccionario_vars),
+unname(diccionario_vars[Variable]),
+Variable
+)
+)
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+data_temp <- datos_finales_sin_errores_ni_inconsistencias
+lista_resultados <- list()
+N_TOTAL <- nrow(data_temp)
+vars_graph <- c(    "Income",
+"Age",
+"Kidhome",
+"Teenhome")
+diccionario_vars <- c(
+"Income"   = "Ingreso anual del hogar (Income)",
+"Age"      = "Edad del cliente (Age)",
+"Kidhome"  = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)"
+)
+for(v in vars_graph) {
+# División de datos por target
+g0 <- as.numeric(data_temp[[v]][which(data_temp$Response == 0)])
+g1 <- as.numeric(data_temp[[v]][which(data_temp$Response == 1)])
+procesar <- function(vec, label_cmp) {
+n_total_subgrupo <- length(vec)
+n_na <- sum(is.na(vec))
+pct_na <- (n_na / n_total_subgrupo) * 100
+vec_clean <- na.omit(vec)
+n_subdataset <- length(vec_clean)
+if(n_subdataset == 0) return(NULL)
+# --- Cálculo de Outliers (Regla 1.5 IQR) ---
+q1 <- quantile(vec_clean, 0.25)
+q3 <- quantile(vec_clean, 0.75)
+iqr_val <- q3 - q1
+lim_inf <- q1 - 1.5 * iqr_val
+lim_sup <- q3 + 1.5 * iqr_val
+# Identificar outliers
+outliers <- vec_clean[vec_clean < lim_inf | vec_clean > lim_sup]
+n_outliers <- length(outliers)
+# Porcentajes
+pct_subdataset <- (n_outliers / n_subdataset) * 100
+pct_global <- (n_outliers / N_TOTAL) * 100
+# --- Generación de estadísticos con summarytools ---
+descr(vec_clean,
+stats = c("n.valid","min","q1","med","q3","max","mean","sd","cv"),
+transpose = TRUE) %>%
+tb() %>%
+rename(Estadistico = 1) %>%
+mutate(
+Variable = v,
+Response = label_cmp,
+Outliers_N = n_outliers,
+`Pct_Outlier_Subgrupo` = pct_subdataset,
+`Pct_Outlier_Global` = pct_global,
+Datos_NA = n_na,
+Pct_Datos_NA = pct_na
+)
+}
+lista_resultados[[paste0(v, "_0")]] <- procesar(g0, 0)
+lista_resultados[[paste0(v, "_1")]] <- procesar(g1, 1)
+}
+# 2. Unir resultados en una sola tabla
+tabla_maestra <- bind_rows(lista_resultados) %>%
+select(Variable, everything(), -Estadistico, Outliers_N, `Pct_Outlier_Subgrupo`, `Pct_Outlier_Global`) %>%
+mutate(
+Variable = str_trim(as.character(Variable)),
+Variable = ifelse(
+Variable %in% names(diccionario_vars),
+unname(diccionario_vars[Variable]),
+Variable
+)
+)
+knitr::kable(tabla_maestra,
+digits = 2,
+caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
+format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+tabla1 <- data.frame( "Nombre" = c( "Income","Kidhome","Teenhome","Recency","MntWines","MntFruits", "MntMeatProducts","MntFishProducts","MntSweetProducts","MntGoldProds", "NumDealsPurchases","NumWebPurchases","NumCatalogPurchases","NumStorePurchases", "NumWebVisitsMonth","AcceptedCmp3","AcceptedCmp4","AcceptedCmp5", "AcceptedCmp1","AcceptedCmp2","Complain","Response","Age", "Customer_Days","marital_Divorced","marital_Married","marital_Single", "marital_Together","marital_Widow","education_2n Cycle","education_Basic", "education_Graduation","education_Master","education_PhD","MntTotal", "MntRegularProds","AcceptedCmpOverall" ),
+"Descripción" = c( "Ingreso anual del hogar del cliente", "Número de niños pequeños en el hogar", "Número de adolescentes en el hogar", "Días desde la última compra", "Gasto en vinos", "Gasto en frutas", "Gasto en carnes", "Gasto en pescado", "Gasto en dulces", "Gasto en productos de oro, productos premium", "Número de compras con descuento", "Número de compras por web", "Número de compras por catálogo", "Número de compras en tienda física", "Número de visitas web en el último mes", "Aceptó campaña 3 (1=Sí, 0=No)", "Aceptó campaña 4 (1=Sí, 0=No)", "Aceptó campaña 5 (1=Sí, 0=No)", "Aceptó campaña 1 (1=Sí, 0=No)", "Aceptó campaña 2 (1=Sí, 0=No)", "Presentó queja", "Aceptó la última campaña", "Edad del cliente", "Días desde que es cliente", "Estado civil divorciado (Binaria - Posible One-Hot Encoding)", "Estado civil casado (Binaria - Posible One-Hot Encoding)", "Estado civil soltero (Binaria - Posible One-Hot Encoding)", "Estado civil en pareja (Binaria - Posible One-Hot Encoding)", "Estado civil viudo (Binaria - Posible One-Hot Encoding)", "Educación secundaria", "Educación básica", "Educación universitaria", "Educación maestría", "Educación doctorado", "Gasto total en todos los productos", "Gasto total en productos regulares que no son premium", "Número total de campañas aceptadas" ),
+"Clasificación por naturaleza" = c( "Cuantitativa Continua", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cuantitativa Discreta", "Cuantitativa Discreta", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Nominal (Dato Binario)", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cualitativa Ordinal", "Cuantitativa Continua", "Cuantitativa Continua", "Cuantitativa Discreta" ),
+stringsAsFactors = FALSE,
+check.names = FALSE)
+diccionario_vars <- c(
+# Demográficas y económicas
+"Income" = "Ingreso anual del hogar (Income)",
+"Age" = "Edad del cliente (Age)",
+"Kidhome" = "Número de niños en el hogar (Kidhome)",
+"Teenhome" = "Número de adolescentes en el hogar (Teenhome)",
+"Customer_Days" = "Antigüedad como cliente en días (Customer_Days)",
+# Estado civil
+"marital_Divorced" = "Estado civil: Divorciado (marital_Divorced)",
+"marital_Married" = "Estado civil: Casado (marital_Married)",
+"marital_Single" = "Estado civil: Soltero (marital_Single)",
+"marital_Together" = "Estado civil: Unión libre (marital_Together)",
+"marital_Widow" = "Estado civil: Viudo (marital_Widow)",
+# Educación
+"education_2n Cycle" = "Nivel educativo: Ciclo técnico (education_2n Cycle)",
+"education_Basic" = "Nivel educativo: Básico (education_Basic)",
+"education_Graduation" = "Nivel educativo: Profesional (education_Graduation)",
+"education_Master" = "Nivel educativo: Maestría (education_Master)",
+"education_PhD" = "Nivel educativo: Doctorado (education_PhD)",
+# Variables monetarias
+"MntWines" = "Gasto en vinos (MntWines)",
+"MntFruits" = "Gasto en frutas (MntFruits)",
+"MntMeatProducts" = "Gasto en carnes (MntMeatProducts)",
+"MntFishProducts" = "Gasto en pescado (MntFishProducts)",
+"MntSweetProducts" = "Gasto en dulces (MntSweetProducts)",
+"MntGoldProds" = "Gasto en productos premium (MntGoldProds)",
+"MntRegularProds" = "Gasto en productos regulares (MntRegularProds)",
+"MntTotal" = "Gasto total del cliente (MntTotal)",
+# Comportamiento de compra
+"Recency" = "Días desde la última compra (Recency)",
+"NumDealsPurchases" = "Compras con descuento (NumDealsPurchases)",
+"NumWebPurchases" = "Compras por página web (NumWebPurchases)",
+"NumCatalogPurchases" = "Compras por catálogo (NumCatalogPurchases)",
+"NumStorePurchases" = "Compras en tienda física (NumStorePurchases)",
+"NumWebVisitsMonth" = "Visitas mensuales al sitio web (NumWebVisitsMonth)",
+# Campañas
+"AcceptedCmp1" = "Aceptó campaña 1 (AcceptedCmp1)",
+"AcceptedCmp2" = "Aceptó campaña 2 (AcceptedCmp2)",
+"AcceptedCmp3" = "Aceptó campaña 3 (AcceptedCmp3)",
+"AcceptedCmp4" = "Aceptó campaña 4 (AcceptedCmp4)",
+"AcceptedCmp5" = "Aceptó campaña 5 (AcceptedCmp5)",
+"AcceptedCmpOverall" = "Total de campañas aceptadas (AcceptedCmpOverall)",
+# Respuesta final y reclamos
+"Response" = "Aceptó última campaña (Response)",
+"Complain" = "Presentó reclamo (Complain)"
+)
+knitr::kable( tabla1, caption = "Descripción y clasificación de variables de acuerdo con su naturaleza",
+format = "html") %>%
+kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+data_temp <- datos_sin_inconsistencia_v1
+vars <- c("Response",
+"Complain")
+plots <- lapply(vars, function(v){
+conteo <- as.data.frame(table(data_temp[[v]], useNA = "ifany"))
+colnames(conteo) <- c("valor", "n")
+conteo$pct <- conteo$n / sum(conteo$n)
+ymax <- max(conteo$pct) * 1.20
+ggplot(conteo, aes(x = factor(valor), y = pct)) +
+geom_col() +
+geom_text(aes(label = paste0("n=", n, "\n", sprintf("%.4f%%", 100*pct))),
+vjust = -0.2, size = 3.8) +
+scale_y_continuous(labels = function(x) sprintf("%.4f%%", 100*x),
+limits = c(0, ymax)) +
+labs(
+title = stringr::str_wrap(diccionario_vars[[v]], width = 30),
+x = "Valor observado",
+y = "Porcentaje"
+) +
+theme_minimal() +
+theme(
+plot.title = element_text(size = 11, face = "bold", hjust = 0.5),
+plot.margin = margin(10, 10, 10, 10)
+)
+})
+wrap_plots(plots, ncol = 3)
