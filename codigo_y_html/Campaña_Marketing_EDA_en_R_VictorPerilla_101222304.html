@@ -1806,9 +1806,17 @@ border-radius: 0px;
 
 <div id="índice" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Índice</h1>
-<p>Materia: Métodos y simulación estadística”</p>
-<p>Postgrado: Maestría en ciencia de datos”</p>
-<p>Institucion: Pontificia Universidad Javeriana de Cali</p>
+<ol style="list-style-type: decimal">
+<li><p>Índice</p></li>
+<li><p>Descripción</p></li>
+<li><p>Objetivos</p></li>
+<li><p>Datos</p></li>
+<li><p>Procesamiento</p></li>
+<li><p>Resultados y discusión</p></li>
+<li><p>Conclusiones</p></li>
+<li><p>Referencias</p></li>
+<li><p>Anexos</p></li>
+</ol>
 </div>
 <div id="descripción" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Descripción</h1>
@@ -2409,7 +2417,7 @@ Registros Únicos Finales
 </tr>
 </tbody>
 </table>
-<p>En el primer preprocesamiento de los datos, se realiza validación de duplicados, se encontraron 2220 registros originales en los datos, pero habían 179 duplicados (8.06%). Al final con la eliminación de datos duplicados quedaron 2041 datos. Esto se puede ver en la Tabla <a href="#tab:tabduplicados">5.1</a></p>
+<p>En el primer preprocesamiento de los datos, se realiza validación de duplicados, no hay un id, tomamos los registros por fila com únicos, se encontraron 2220 registros originales en los datos, pero habían 179 duplicados (8.06%). Al final con la eliminación de datos duplicados quedaron 2041 datos. Esto se puede ver en la Tabla <a href="#tab:tabduplicados">5.1</a></p>
 </div>
 <div id="inconsistencias-de-datos" class="section level3" number="5.1.2">
 <h3><span class="header-section-number">5.1.2</span> Inconsistencias de datos</h3>
@@ -6724,8 +6732,8 @@ MntRegularProds_antes
 </div>
 </div>
 </div>
-<div id="resultados" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Resultados</h1>
+<div id="resultados-y-discusión" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Resultados y discusión</h1>
 <div id="variable-target-aceptación-de-la-ultima-campaña-response" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Variable target, aceptación de la ultima campaña (Response)</h2>
 <pre class="r"><code>data_temp &lt;- datos_sin_inconsistencia_v1
@@ -10300,8 +10308,9 @@ Quejas casi no diferencian aceptación; distribución muy similar entre grupos.(
 </tbody>
 </table>
 </div>
-<div id="conclusiones" class="section level2" number="6.7">
-<h2><span class="header-section-number">6.7</span> Conclusiones</h2>
+</div>
+<div id="conclusiones" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Conclusiones</h1>
 <ul>
 <li><p>La variable target, aceptación de la última campaña (Response) tiene desbalance, se tuvo el suspuesto de que cada categoría es representativa y se procedió a analizar, tener en cuenta que para entrenamiento puede ser requerido balancear datos de entrenamiento, y en test mantener desbalanceado para tener métricas reales en producción, se requiere un modelo de clasificación y se aconseja probar modelos como regresión logistica y modelos basados en arboles de decisión.</p></li>
 <li><p>La variables con poder predictivo alto: Días desde la última compra (Recency) es la de más poder. Los clientes que compraron hace poco muestran una probabilidad mucho mayor de aceptar la campaña. La separación entre quienes aceptan y no aceptan es consistente en todos los cruces realizados. El total de campañas aceptadas (AcceptedCmpOverall) también tiene gran fuerza. funciona como un indicador directo de clasificación. Se debe tener cuidado de que el modelo solo quede dependiendo de estas features, se debe validar si no causan sobreentrenamiento. Por ultimo MntTotal muestra una diferenciación clara. Los clientes que gastan más tienden a aceptar más.</p></li>
@@ -10313,9 +10322,8 @@ Quejas casi no diferencian aceptación; distribución muy similar entre grupos.(
 <li><p>En conclusión final tenemos un grupo de variables que permitirán crear un modelo, esto vale oro para el negoció y tener un bueno modelo de predicción será relevante para saber a que clientes enfocar la campaña y mejorar en costos. Habrán modelos más robustos como uplift para lograr el objetivos más enfocados, pero se debe iniciar por una linea base.</p></li>
 </ul>
 </div>
-</div>
-<div id="referencias" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Referencias</h1>
+<div id="referencias" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Referencias</h1>
 <ul>
 <li><p>Centro Magis. (2026). Material del curso Métodos y Simulación (Versión 2026). Maestría en Ciencia de Datos, Pontificia Universidad Javeriana Cali, Facultad de Ingeniería.</p></li>
 <li><p>Comtois, D. (2023). summarytools: Tools to quickly and neatly summarize data (R package version). <a href="https://CRAN.R-project.org/package=summarytools" class="uri">https://CRAN.R-project.org/package=summarytools</a></p></li>
@@ -10326,8 +10334,8 @@ Quejas casi no diferencian aceptación; distribución muy similar entre grupos.(
 <li><p>Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L., François, R., … &amp; Yutani, H. (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686. <a href="https://doi.org/10.21105/joss.01686" class="uri">https://doi.org/10.21105/joss.01686</a></p></li>
 </ul>
 </div>
-<div id="anexos" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Anexos</h1>
+<div id="anexos" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Anexos</h1>
 <p>El repositorio del proyecto se encuentra disponible públicamente en GitHub en el siguiente enlace:</p>
 <p><a href="https://github.com/vperilla95/Campana_Marketing_EDA_en_R" class="uri">https://github.com/vperilla95/Campana_Marketing_EDA_en_R</a></p>
 <p>El repositorio contiene los archivos necesarios para reproducir el análisis exploratorio realizado en este trabajo. La estructura del proyecto es la siguiente:</p>

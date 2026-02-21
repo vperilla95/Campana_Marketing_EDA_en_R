@@ -17,11 +17,23 @@ encoding: UTF-8
 
 # Índice
 
-Materia: Métodos y simulación estadística"
+1. Índice
 
-Postgrado: Maestría en ciencia de datos"
+2. Descripción
 
-Institucion: Pontificia Universidad Javeriana de Cali
+3. Objetivos
+
+4. Datos
+
+5. Procesamiento
+
+6. Resultados y discusión
+
+7. Conclusiones
+
+8. Referencias
+
+9. Anexos
 
 # Descripción
 
@@ -210,7 +222,7 @@ knitr::kable( resumen_duplicados, caption = "Resumen de validación de datos dup
 
 ```
 
-En el primer preprocesamiento de los datos, se realiza validación de duplicados, se encontraron 2220 registros originales en los datos, pero habían 179 duplicados (8.06%). Al final con la eliminación de datos duplicados quedaron 2041 datos. Esto se puede ver en la Tabla \@ref(tab:tabduplicados)
+En el primer preprocesamiento de los datos, se realiza validación de duplicados, no hay un id, tomamos los registros por fila com únicos, se encontraron 2220 registros originales en los datos, pero habían 179 duplicados (8.06%). Al final con la eliminación de datos duplicados quedaron 2041 datos. Esto se puede ver en la Tabla \@ref(tab:tabduplicados)
 
 ### Inconsistencias de datos
 
@@ -1284,7 +1296,7 @@ write.csv(datos_finales_sin_errores_ni_inconsistencias,
           row.names = FALSE)
 ```
 
-# Resultados
+# Resultados y discusión
 
 ## Variable target, aceptación de la ultima campaña (Response)
 
@@ -2231,7 +2243,7 @@ tabla_poder_predictivo %>%
   )
 ```
 
-## Conclusiones
+# Conclusiones
 
 - La variable target, aceptación de la última campaña (Response) tiene desbalance, se tuvo el suspuesto de que cada categoría es representativa y se procedió a analizar, tener en cuenta que para entrenamiento puede ser requerido balancear datos de entrenamiento, y en test mantener desbalanceado para tener métricas reales en producción, se requiere un modelo de clasificación y se aconseja probar modelos como regresión logistica y modelos basados en arboles de decisión.
 
