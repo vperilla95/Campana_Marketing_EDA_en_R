@@ -173,7 +173,7 @@ diccionario_vars <- c(
 
 knitr::kable( tabla1, caption = "Descripción y clasificación de variables de acuerdo con su naturaleza",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 # Procesamiento
@@ -206,7 +206,7 @@ resumen_duplicados <- data.frame(
 
 knitr::kable( resumen_duplicados, caption = "Resumen de validación de datos duplicados",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -338,7 +338,7 @@ resumen_correccion_divorced <- data.frame(
 
 knitr::kable( resumen_correccion_divorced, caption = "Resumen de Corrección de Error de Digitación: Estado Civil marital_Divorced",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -385,7 +385,7 @@ resumen_estado_civil <- data.frame(
 
 knitr::kable( resumen_estado_civil, caption = "Resumen de Validación e Imputación: Estado Civil",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -436,9 +436,9 @@ wrap_plots(plots, ncol = 3)
 
 ```
 
-Adicionalmente se valida el grupo de variables de nivel de educación y se entienden como una variable categórica a la cual se le realizón codificación One-Hot-Encoding, por lo cual se valida inconsistencias de si algún registro no definido algún nivel de educación o si tiene más de un nivel de educación, para este grupo de registros no se encontraron inconsistencias de este tipo. El resumen de la validación está en la tabla \@ref(tab:tab-inconsiste_one_hot_encoding_nivel_educacion)
+Adicionalmente se valida el grupo de variables de nivel de educación y se entienden como una variable categórica a la cual se le realizón codificación One-Hot-Encoding, por lo cual se valida inconsistencias de si algún registro no definido algún nivel de educación o si tiene más de un nivel de educación, para este grupo de registros no se encontraron inconsistencias de este tipo. El resumen de la validación está en la tabla \@ref(tab:tab-inconsisteEncodingNivelEducacion)
 
-```{r tab-inconsiste_one_hot_encoding_nivel_educacion, message=FALSE, warning=FALSE, results='hide'}
+```{r tab-inconsisteEncodingNivelEducacion, message=FALSE, warning=FALSE}
 nivel_educativo <- c("education_Basic", "education_2n Cycle", 
                      "education_Graduation", "education_Master", "education_PhD")
 
@@ -471,9 +471,9 @@ resumen_validacion_educacion <- data.frame(
 )
 
 
-knitr::kable( resumen_estado_civil, caption = "esumen de Validación: Nivel Educativo (One-Hot)",
+knitr::kable( resumen_estado_civil, caption = "Resumen de Validación: Nivel Educativo (One-Hot)",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -622,8 +622,8 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 
 knitr::kable(tabla_maestra, 
              digits = 2, 
-             caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             caption = "Análisis de Variables y Outliers (1.5*IQR) por Campaña",
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11) %>% scroll_box(width = "700px")
 ```
 
 ```{r tabInconsisteVariablesMonetarias, message=FALSE, warning=FALSE}
@@ -664,7 +664,7 @@ resumen_monetario <- data.frame(
 knitr::kable(resumen_monetario, 
              digits = 2, 
              caption = "Resumen inconsistencias en variables monetarias",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 ```{r tabErrrMontosProductoSum, message=FALSE, warning=FALSE}
@@ -693,7 +693,7 @@ tabla_inconsistencia_montos = rbind(head(registros_inconsistentes_mnt[, c(column
 
 knitr::kable(tabla_inconsistencia_montos, 
              caption = "Datos inconsistentes en Mnt hallazgos de (NA) y de datos negativos",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -821,8 +821,8 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 
 knitr::kable(tabla_maestra, 
              digits = 2, 
-             caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             caption = "Análisis de Variables y Outliers (1.5*IQR) por Campaña",
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11) %>% scroll_box(width = "700px")
 ```
 
 ```{r tab-eliminar-age, message=FALSE, warning=FALSE}
@@ -859,7 +859,7 @@ resumen_limpieza_edad <- data.frame(
 knitr::kable(resumen_limpieza_edad, 
              digits = 2, 
              caption = "Resumen de Limpieza: Datos de Edad con valores atípicos no posibles en la realidad.",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 Se hace la verificación que se observa en la Tabla \@ref(tab:tab-eliminar-age) que la variable `Age` tenía 2 edades que mostraban inconsistencias, en la Tabla \@ref(tab:tab-cuant-disc-ac5-descr) se ve que tienen un valor máximo de 240 años, de por si representa un 0.098% de los datos, se procede a eliminar los valores. La eliminación se justifica debido a que es un error estructural de los datos, no un outlier ya que no tiene sentido un humano con esa edad, tratar de imputarlo podría ser un error y generar afectaciones a los datos. La decisión no afectan representatividad, no alteran distribución, no sesgan muestra, realmente no generan pérdida significativa de información.
@@ -891,7 +891,7 @@ resumen_cmp <- validacion_cmp %>%
 knitr::kable(resumen_cmp, 
              digits = 2, 
              caption = "Resumen de Validación: AcceptedCmpOverall vs. Suma de Campañas",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 
 ```
 
@@ -957,7 +957,7 @@ resultado_mcar <- naniar::mcar_test(sub_mcar)
 knitr::kable(resultado_mcar, 
              caption = "Resultados de aplicación de prueba mcar a datos",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 En la Tabla \@ref(tab:tabMcar) El valor p obtenido fue igual a 6.416355e-07, lo que lleva a rechazar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes no son completamente aleatorios, tienen sesgo.
@@ -995,7 +995,7 @@ resumen_mntwines <- data.frame(
 knitr::kable(resumen_mntwines, 
              caption = "Resultados de aplicación de imputación de datos de variable MntWines con recuperación del dato",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 Después de esta imputación de datos `(NA)`evaluamos de nuevo si los datos faltantes se distribuyen de manera completamente aleatoria (MCAR), de acá encontramos en la Tabla \@ref(tab:tabMcarAgain) que con un El valor p obtenido fue igual a 0.3058334, podemos aceptar la hipótesis nula con una significancia del 1%. Esto indica que existe evidencia suficiente para decir que los datos faltantes son completamente aleatorios y podemos imputar la variable Income con la media o la mediana.
@@ -1010,7 +1010,7 @@ resultado_mcar <- naniar::mcar_test(sub_mcar)
 knitr::kable(resultado_mcar, 
              caption = "Resultados de aplicación de prueba mcar a datos",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 ### Imputación de datos faltantes e inconsistentes
@@ -1026,20 +1026,19 @@ En la figura \@ref(fig:fig-NormMCAR) podemos ver que puede haber una tendencia a
 ```{r fig-NormMCAR, eval=TRUE, fig.cap=" Q-Q de Income. Además, densidad de Income", echo=FALSE}
 
 data_temp <- datos_sin_inconsistencia_v3 %>% 
-  filter(if_all(c(Income), is.finite))    # descarta NA/Inf
+  dplyr::filter(is.finite(Income))   # descarta NA/Inf
 
-# Q‑Q plots
-qq_Income      <- ggplot(data_temp, aes(sample = diccionario_vars["Income"]))      +
-               stat_qq() + stat_qq_line(colour = "red") +
-               ggtitle(diccionario_vars["Income"])
+qq_Income <- ggplot(data_temp, aes(sample = Income)) +
+  stat_qq() +
+  stat_qq_line(colour = "red") +
+  ggtitle(diccionario_vars[["Income"]])
 
-#  Densidades 
-density_Income      <- ggplot(data_temp, aes(x = Income))      +
-                    geom_density(fill = "blue", alpha = .3)  +
-                    ggtitle("")
+density_Income <- ggplot(data_temp, aes(x = Income)) +
+  geom_density(fill = "blue", alpha = .3) +
+  ggtitle("") +
+  xlab(diccionario_vars[["Income"]])
 
-
-grid.arrange(
+gridExtra::grid.arrange(
   qq_Income,
   density_Income,
   ncol = 1
@@ -1092,7 +1091,7 @@ resultados_imputacion <- data.frame(
 knitr::kable(resultados_imputacion, 
              caption = "Resultados de imputación de datos en varable Income",
              format = "html") %>%
-  kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+  kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)
 ```
 
 #### Imputación - reconstrucción de Monto total y Monto de productos regulares.
@@ -1264,8 +1263,8 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 
 knitr::kable(tabla_maestra, 
              digits = 2, 
-             caption = "Análisis de Montos y Outliers (1.5*IQR) para reconstrucción de MntTotal y MntRegularProds ",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             caption = "Análisis de Variables y Outliers (1.5*IQR) para reconstrucción de MntTotal y MntRegularProds ",
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)%>% scroll_box(width = "700px")
 ```
 
 ```{r carga_datos_limpios, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
@@ -1433,11 +1432,16 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 
 knitr::kable(tabla_maestra, 
              digits = 2, 
-             caption = "Análisis de Montos y Outliers (1.5*IQR) por Campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             caption = "Análisis de Variables y Outliers (1.5*IQR) por Campaña",
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11) %>% scroll_box(width = "700px")
 ```
 
-Viendo la \@ref(fig:figDemograficosCuantitivos) y la Tabla \@ref(tab:tabDemograficosCuantitivos) se observa que: - Ingreso anual del hogar (Income) tiene una  diferencia entre quienes aceptan y no aceptan ️la última campaña,los que aceptan tienen mayor ingreso. Es una variable predictora potencial. - Edad del cliente (Age) No hay separación real entre grupos. No se observa patrón diferencial fuerte. No es una variable predictora potencial. - Número de niños en el hogar (Kidhome) tiene una diferencia pequeña podría indicar que hogares con menos niños aceptan un poco más, pero la señal es débil. Es una variable predictora bajamente potencial. - Número de adolescentes en el hogar (Teenhome) Clientes con más adolescentes parecen aceptar menos, hay señal más clara que en Kidhome. Es una variable predictora medianamente potencial.
+Viendo la \@ref(fig:figDemograficosCuantitivos) y la Tabla \@ref(tab:tabDemograficosCuantitivos) se observa que: 
+
+- Ingreso anual del hogar (Income) tiene una  diferencia entre quienes aceptan y no aceptan ️la última campaña,los que aceptan tienen mayor ingreso. Es una variable predictora potencial.
+- Edad del cliente (Age) No hay separación real entre grupos. No se observa patrón diferencial fuerte. No es una variable predictora potencial. 
+- Número de niños en el hogar (Kidhome) tiene una diferencia pequeña podría indicar que hogares con menos niños aceptan un poco más, pero la señal es débil. Es una variable predictora bajamente potencial. 
+- Número de adolescentes en el hogar (Teenhome) Clientes con más adolescentes parecen aceptar menos, hay señal más clara que en Kidhome. Es una variable predictora medianamente potencial.
 
 Se obseerva una diferencia en quartiles para Edad del cliente (Age), Número de niños en el hogar (Kidhome) y úmero de adolescentes en el hogar (Teenhome), por lo cual se decide hacer un análisis diferenciando cuartiles debido a que esto puede motrar una relación profunda e identificar si en algunas poblaciones puede haber diferencia.
 
@@ -1498,7 +1502,7 @@ En la figura \@ref(fig:figDemograficosCuantitivosProfundo) se ve que:
 
 Este último análisis puede aplicar sobretodo en modelos de clasificacion de arboles que puede manejar rangos de variables, o categorizarlas para facilitar su entendimiento en otro tipo de modelos.
 
-```{r figAcceptedCmpDemografico, message=FALSE, warning=FALSE, fig.cap="Distribución porcentual de las variables de aceptación de campañas (Binarias). Se incluyen valores faltantes como categoría explícita.", fig.width=10, fig.height=12}
+```{r figAcceptedCmpDemografico, message=FALSE, warning=FALSE, fig.cap="Distribución porcentual de las variables (Binarias)", fig.width=10, fig.height=12}
 
 vars <- c("marital_Divorced","marital_Married","marital_Single", "marital_Together","marital_Widow","education_Basic", "education_2n Cycle", "education_Graduation","education_Master","education_PhD")
 
@@ -1642,7 +1646,7 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 knitr::kable(tabla_maestra, 
              digits = 2, 
              caption = "Análisis de Montos de gastos por aceptación de la última campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11)%>% scroll_box(width = "700px")
 ```
 
 Viendo la \@ref(fig:figGastoCuantitivos) y la Tabla \@ref(tab:tabGastoCuantitivos) se observa que: Gasto en vinos (MntWines), Gasto en frutas (MntFruits), Gasto en carnes (MntMeatProducts), Gasto en pescado (MntFishProducts), Gasto en dulces (MntSweetProducts), Gasto en productos premium (MntGoldProds), Gasto en productos regulares (MntRegularProds) y Gasto total del cliente (MntTotal), tienen una  diferencia entre quienes aceptan y no aceptan ️la última campaña,los que aceptan tienen mayor gasto. Es una variable predictora potencial.
@@ -1750,7 +1754,7 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 knitr::kable(tabla_maestra, 
              digits = 2, 
              caption = "Análisis de canales de venta por aceptación de última Campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11) %>% scroll_box(width = "700px")
 ```
 
 Viendo la \@ref(fig:figCanalesCuantitivos) y la Tabla \@ref(tab:tabCanalesCuantitivos) se observa que:
@@ -1761,7 +1765,7 @@ Siendo Compras por catálogo (NumCatalogPurchases) la que parece tener más pote
 
 Por el contrario, Visitas mensuales al sitio web (NumWebVisitsMonth) y Compras con descuento (NumDealsPurchases) son las que muestran menos potencia predictora, debido a que las cajas de ambos grupos están casi al mismo nivel y se solapan significativamente, lo que indica que el comportamiento es muy similar independientemente de si aceptaron la campaña o no. Aún así vamos a revisarlas más a profundidad debido a que por cuartiles podemos ver algunas diferencias.
 
-```{r figCanalesCuantitivosProfundo, message=FALSE, warning=FALSE, fig.cap="Datos demograficos (Response, 0 = No, 1 = Sí Aceptó última campaña).", fig.width=11, fig.height=8}
+```{r figCanalesCuantitivosProfundo, message=FALSE, warning=FALSE, fig.cap="Datos de canales (Response, 0 = No, 1 = Sí Aceptó última campaña).", fig.width=11, fig.height=8}
 
 data_temp <- datos_finales_sin_errores_ni_inconsistencias
 
@@ -1882,7 +1886,7 @@ Las variables de Aceptó campaña 4 (AcceptedCmp4) y Aceptó campaña 3 (Accepte
 
 Por el contrario, Aceptó campaña 2 (AcceptedCmp2) es la que posee menos potencia predictora, ya que solo el 1.32% de los clientes la aceptó. Al tener tan pocos casos positivos (solamente 27 personas), es muy difícil que un modelo estadístico o de machine learning pueda extraer una regla general confiable de esta variable pero puede ser necesaria debido a la cosistencia de la data.
 
-```{r figAceptFidelidadCuantitivos, message=FALSE, warning=FALSE, fig.cap="Distribución de variables según  (Response, 0 = No, 1 = Sí Aceptó última campaña).", fig.width=11, fig.height=8}
+```{r figAceptFidelidadCuantitivos, message=FALSE, warning=FALSE, fig.cap="Distribución de variables para (Response, 0 = No, 1 = Sí Aceptó última campaña).", fig.width=11, fig.height=8}
 
 data_temp <- datos_sin_inconsistencia_v1
 
@@ -1892,7 +1896,7 @@ plots <- lapply(vars_graph, function(v){
   ggplot(data_temp, aes(x = factor(Response), y = .data[[v]], fill = factor(Response))) +
     geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 1.5, alpha = 0.7) +
     scale_fill_manual(values = c("#3498db", "#2ecc71")) +
-    labs(title = diccionario_vars[[v]], 
+    labs(title = gsub("\\(", "\n(", diccionario_vars[[v]]), 
          x = "Aceptó última campaña", 
          y = "Cantidad") +
     theme_minimal() +
@@ -1979,7 +1983,7 @@ tabla_maestra <- bind_rows(lista_resultados) %>%
 knitr::kable(tabla_maestra, 
              digits = 2, 
              caption = "Análisis de Datos de aceptación y fidelidad por aceptación de la última Campaña",
-             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"))
+             format = "html") %>%   kable_styling(bootstrap_options = c("bordered", "striped", "hover"), full_width = F, font_size = 11) %>% scroll_box(width = "700px")
 ```
 
 Viendo la \@ref(fig:figAceptFidelidadCuantitivos) y la Tabla \@ref(tab:tabAceptFidelidadCuantitivos) se observa que: El Total de campañas aceptadas (AcceptedCmpOverall) y Días desde la última compra (Recency) presentan una  diferencia muy marcada entre quienes aceptan y no aceptan la última campaña. En el primer caso, quienes aceptan tienen un historial de aceptación previo mucho mayor, y en el segundo, los que aceptan tienden a haber comprado mucho más recientemente. Son variables predictoras con un potencial altísimo.
@@ -2223,7 +2227,7 @@ tabla_poder_predictivo %>%
   ) %>%
   kable_styling(
     bootstrap_options = c("striped","hover","condensed","bordered"),
-    full_width = FALSE
+    full_width = F, font_size = 11
   )
 ```
 
@@ -2282,7 +2286,7 @@ Carpeta datos/:
 
 - `datos_limpios.csv`
 
-Carpeta codigo/:
+Carpeta codigo_y_html/:
 
 - `Campaña_Marketing_EDA_en_R_VictorPerilla_101222304.Rmd`
 
